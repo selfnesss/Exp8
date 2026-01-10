@@ -1,0 +1,19 @@
+# Virtual env
+.venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+
+# Databases and outputs
+*.db
+*.sqlite3
+outputs/
+
+# IDE
+.vscode/
+.idea/
+*.suo
+
+# OS
+.DS_Store
