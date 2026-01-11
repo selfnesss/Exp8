@@ -1,7 +1,0 @@
-id,name,brand,size,color,price,stock,rating,category_id,description
-1,Classic T-Shirt,BrandA,M,White,799.0,50,4.5,1,Basic cotton tee
-2,Denim Jeans,BrandB,32,Blue,2199.0,30,4.6,1,Slim fit jeans
-3,Summer Dress,BrandC,XS,Red,1799.0,20,4.4,2,Light summer dress
-4,Wool Coat,BrandD,L,Black,5999.0,5,4.8,2,Warm wool coat
-5,Kids Hoodie,BrandE,8,Green,999.0,25,4.3,3,Soft fleece hoodie
-6,Baseball Cap,BrandF,OneSize,Blue,399.0,100,4.0,4,Adjustable cap
