@@ -69,86 +69,107 @@ INDEX_HTML = '''
 <head>
 <title>Electronics Store — Прототип</title>
 <style>
+:root {
+    --bg: #f6f4f1;
+    --paper: #ffffff;
+    --ink: #1f2a37;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #b45309;
+}
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 20px;
-    color: #333;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    background-color: var(--bg);
+    margin: 24px;
+    color: var(--ink);
 }
 h2 {
-    color: #2c3e50;
+    color: var(--ink);
     text-align: center;
+    letter-spacing: 0.3px;
 }
 form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    background-color: var(--paper);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+    margin-bottom: 16px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
+    border: 1px solid var(--line);
 }
 form input, form select, form button {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+}
+form input, form select {
+    color: var(--ink);
 }
 form button {
-    background-color: #3498db;
-    color: white;
+    background-color: var(--ink);
+    color: #fff;
     cursor: pointer;
     border: none;
 }
 form button:hover {
-    background-color: #2980b9;
+    background-color: #111827;
 }
 table {
     width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--paper);
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+    border-radius: 12px;
     overflow: hidden;
+    border: 1px solid var(--line);
 }
 nav.actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px 16px;
     justify-content: center;
-    margin: 10px 0 20px;
-    font-size: 14px;
+    margin: 6px 0 18px;
+    font-size: 13px;
+    color: var(--muted);
 }
 nav.actions a {
-    color: #2c3e50;
+    color: var(--ink);
     text-decoration: none;
     font-weight: 600;
-    padding-bottom: 2px;
+    padding: 4px 0;
     border-bottom: 2px solid transparent;
 }
 nav.actions a:hover {
-    border-bottom-color: #3498db;
+    border-bottom-color: var(--accent);
 }
 th, td {
-    padding: 12px;
+    padding: 12px 14px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--line);
 }
 th {
-    background-color: #34495e;
-    color: white;
+    background-color: #f3f4f6;
+    color: var(--ink);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.6px;
 }
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #fafafa;
 }
 tr:hover {
-    background-color: #e8f4fd;
+    background-color: #fef3c7;
 }
 img {
-    max-width: 100px;
+    max-width: 96px;
     height: auto;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 </style>
 </head>
@@ -168,13 +189,14 @@ img {
   <button>Применить</button>
 </form>
 <table>
-<tr><th>Изображение</th><th>Название</th><th>Бренд</th><th>Модель/Спецификация</th><th>Цена</th><th>Запас</th><th>Рейтинг</th><th>Категория</th><th>Действия</th></tr>
+<tr><th>Изображение</th><th>Название</th><th>Бренд</th><th>Модель/Спецификация</th><th>Описание</th><th>Цена</th><th>Запас</th><th>Рейтинг</th><th>Категория</th><th>Действия</th></tr>
 {% for p in products %}
 <tr>
   <td>{% if p.image %}<img src="{{p.image}}" alt="{{p.name}}">{% endif %}</td>
   <td>{{p.name}}</td>
   <td>{{p.brand}}</td>
   <td>{{p.model}} {{p.spec}}</td>
+  <td>{{p.description}}</td>
   <td>{{p.price}}</td>
   <td>{{p.stock}}</td>
   <td>{{p.rating}}</td>
@@ -201,6 +223,29 @@ form button { background-color: #3498db; color: white; padding: 10px; border: no
 form button:hover { background-color: #2980b9; }
 .btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
 .btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--paper); box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background-color: #f3f4f6; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.6px; }
+tr:nth-child(even) { background-color: #fafafa; }
+tr:hover { background-color: #fef3c7; }
 </style>
 </head>
 <body>
@@ -242,6 +287,16 @@ form button { background-color: #3498db; color: white; padding: 10px; border: no
 form button:hover { background-color: #2980b9; }
 .btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
 .btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -271,6 +326,21 @@ th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
 th { background-color: #34495e; color: white; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:hover { background-color: #e8f4fd; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--paper); box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background-color: #f3f4f6; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.6px; }
+tr:nth-child(even) { background-color: #fafafa; }
+tr:hover { background-color: #fef3c7; }
 .btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
 .btn-link:hover { background: #e2e8f0; }
 </style>
@@ -310,6 +380,16 @@ form select, form input { padding: 8px; margin: 5px 0; border: 1px solid #ddd; b
 button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
 button:hover { background-color: #2980b9; }
 .add-product { margin-top: 10px; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
 .btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
 .btn-link:hover { background: #e2e8f0; }
 </style>
@@ -375,16 +455,19 @@ ORDERS_HTML = '''
 <head>
 <title>Orders — Electronics Store</title>
 <style>
-body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 20px; }
-h2 { color: #2c3e50; text-align: center; }
-form.filter { background-color: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-form.filter label { font-size: 14px; color: #2c3e50; }
-form.filter select, form.filter input { padding: 6px; border: 1px solid #ddd; border-radius: 4px; }
-table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
-th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-th { background-color: #34495e; color: white; }
-tr:nth-child(even) { background-color: #f9f9f9; }
-tr:hover { background-color: #e8f4fd; }
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form.filter { background-color: var(--paper); padding: 12px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; border: 1px solid var(--line); }
+form.filter label { font-size: 13px; color: var(--muted); }
+form.filter select, form.filter input { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form.filter button { background-color: var(--ink); color: #fff; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+form.filter button:hover { background-color: #111827; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--paper); box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background-color: #f3f4f6; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.6px; }
+tr:nth-child(even) { background-color: #fafafa; }
+tr:hover { background-color: #fef3c7; }
 .status-select { padding: 6px; border-radius: 16px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; }
 .status-new { background: #e3f2fd; color: #1565c0; }
 .status-processing { background: #fff8e1; color: #8d6e63; }
@@ -484,6 +567,21 @@ th { background-color: #34495e; color: white; }
 .status-shipped { background: #ede7f6; color: #5e35b1; }
 .status-delivered { background: #e8f5e9; color: #2e7d32; }
 .status-canceled { background: #ffebee; color: #c62828; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; background-color: var(--paper); box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background-color: #f3f4f6; color: var(--ink); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.6px; }
+tr:nth-child(even) { background-color: #fafafa; }
+tr:hover { background-color: #fef3c7; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 <script>
 function updateStatusClass(selectEl) {
@@ -550,6 +648,16 @@ form button { background-color: #3498db; color: white; padding: 10px; border: no
 form button:hover { background-color: #2980b9; }
 .btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
 .btn-link:hover { background: #e2e8f0; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -589,6 +697,16 @@ form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 
 form input { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
 form button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
 form button:hover { background-color: #2980b9; }
+/* Base theme */
+:root { --bg: #f6f4f1; --paper: #ffffff; --ink: #1f2a37; --muted: #6b7280; --line: #e5e7eb; --accent: #b45309; }
+body { font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif; background-color: var(--bg); margin: 24px; color: var(--ink); }
+h2 { color: var(--ink); text-align: center; letter-spacing: 0.3px; }
+form { background-color: var(--paper); padding: 16px; border-radius: 12px; box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08); margin-bottom: 16px; border: 1px solid var(--line); }
+form input, form select, form textarea, form button { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+form button { background-color: var(--ink); color: #fff; cursor: pointer; border: none; }
+form button:hover { background-color: #111827; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -600,7 +718,7 @@ form button:hover { background-color: #2980b9; }
   <input name="email" value="{{customer.email}}" placeholder="Email" required>
   <button>Обновить клиента</button>
 </form>
-<p><a href="/customers">Вернуться к клиентам</a></p>
+<p><a class="btn-link" href="/customers">Назад к клиентам</a></p>
 </body>
 </html>
 '''
