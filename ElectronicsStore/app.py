@@ -43,7 +43,7 @@ INDEX_HTML = '''
 <h2>Products</h2>
 <form method="get">
   Search: <input name="q" value="{{q}}"> 
-  Category: <select name="cat"><option value="">All</option>{% for c in cats %}<option value="{{c.id}}" {% if cat==str(c.id) %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
+  Category: <select name="cat"><option value="">All</option>{% for c in cats %}<option value="{{c.id}}" {% if cat and cat|int == c.id %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
   Sort: <select name="sort"><option value="name">Name</option><option value="price">Price</option><option value="rating">Rating</option></select>
   <button>Apply</button>
 </form>
