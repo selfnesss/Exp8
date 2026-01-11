@@ -39,7 +39,27 @@ def get_db():
     if db is None:
         db = g._db = sqlite3.connect(DB_PATH)
         db.row_factory = sqlite3.Row
+        ensure_orders_status_column(db)
     return db
+
+ORDER_STATUSES = ['Новый', 'В обработке', 'Отправлен', 'Доставлен', 'Отменен']
+ORDER_STATUS_CLASSES = {
+    'Новый': 'new',
+    'В обработке': 'processing',
+    'Отправлен': 'shipped',
+    'Доставлен': 'delivered',
+    'Отменен': 'canceled',
+}
+
+def ensure_orders_status_column(db):
+    if getattr(g, '_orders_status_checked', False):
+        return
+    cols = [row['name'] for row in db.execute('PRAGMA table_info(orders)').fetchall()]
+    if 'status' not in cols:
+        db.execute("ALTER TABLE orders ADD COLUMN status TEXT DEFAULT 'Новый'")
+        db.execute("UPDATE orders SET status = 'Новый' WHERE status IS NULL")
+        db.commit()
+    g._orders_status_checked = True
 
 app = Flask(__name__)
 
@@ -92,6 +112,24 @@ table {
     border-radius: 8px;
     overflow: hidden;
 }
+nav.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    justify-content: center;
+    margin: 10px 0 20px;
+    font-size: 14px;
+}
+nav.actions a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+}
+nav.actions a:hover {
+    border-bottom-color: #3498db;
+}
 th, td {
     padding: 12px;
     text-align: left;
@@ -116,7 +154,13 @@ img {
 </head>
 <body>
 <h2>Товары</h2>
-<p><a href="/add_product">Добавить новый товар</a> | <a href="/add_customer">Добавить нового клиента</a> | <a href="/customers">Просмотр клиентов</a> | <a href="/add_order">Добавить новый заказ</a> | <a href="/orders">Просмотр заказов</a></p>
+<nav class="actions">
+  <a href="/add_product">Добавить новый товар</a>
+  <a href="/add_customer">Добавить нового клиента</a>
+  <a href="/customers">Просмотр клиентов</a>
+  <a href="/add_order">Добавить новый заказ</a>
+  <a href="/orders">Просмотр заказов</a>
+</nav>
 <form method="get">
   Поиск: <input name="q" value="{{q}}" placeholder="Поиск по названию, описанию или бренду"> 
   Категория: <select name="cat"><option value="">Все</option>{% for c in cats %}<option value="{{c.id}}" {% if cat and cat|int == c.id %}selected{% endif %}>{{c.name}}</option>{% endfor %}</select>
@@ -155,6 +199,8 @@ form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 
 form input, form select, form textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
 form button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
 form button:hover { background-color: #2980b9; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -177,7 +223,7 @@ form button:hover { background-color: #2980b9; }
   <input name="image" placeholder="URL изображения">
   <button>Добавить товар</button>
 </form>
-<p><a href="/">Вернуться к товарам</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
 </body>
 </html>
 '''
@@ -194,6 +240,8 @@ form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 
 form input { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
 form button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
 form button:hover { background-color: #2980b9; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -205,7 +253,7 @@ form button:hover { background-color: #2980b9; }
   <input name="email" placeholder="Email" required>
   <button>Добавить клиента</button>
 </form>
-<p><a href="/">Вернуться к товарам</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
 </body>
 </html>
 '''
@@ -223,6 +271,8 @@ th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
 th { background-color: #34495e; color: white; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:hover { background-color: #e8f4fd; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -240,7 +290,7 @@ tr:hover { background-color: #e8f4fd; }
 </tr>
 {% endfor %}
 </table>
-<p><a href="/">Back to Products</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
 </body>
 </html>
 '''
@@ -260,6 +310,8 @@ form select, form input { padding: 8px; margin: 5px 0; border: 1px solid #ddd; b
 button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
 button:hover { background-color: #2980b9; }
 .add-product { margin-top: 10px; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 <script>
 function addProduct() {
@@ -292,6 +344,11 @@ function removeProduct(btn) {
     <option value="{{c.id}}">{{c.first_name}} {{c.last_name}} ({{c.email}})</option>
     {% endfor %}
   </select>
+  <select name="status" required>
+    {% for s in order_statuses %}
+    <option value="{{s}}">{{s}}</option>
+    {% endfor %}
+  </select>
   <div id="products-container">
     <div class="product-row">
       <select name="product_ids" required>
@@ -307,7 +364,7 @@ function removeProduct(btn) {
   <br><br>
   <button type="submit">Создать заказ</button>
 </form>
-<p><a href="/">Вернуться к товарам</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
 </body>
 </html>
 '''
@@ -320,28 +377,161 @@ ORDERS_HTML = '''
 <style>
 body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 20px; }
 h2 { color: #2c3e50; text-align: center; }
+form.filter { background-color: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+form.filter label { font-size: 14px; color: #2c3e50; }
+form.filter select, form.filter input { padding: 6px; border: 1px solid #ddd; border-radius: 4px; }
 table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
 th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
 th { background-color: #34495e; color: white; }
 tr:nth-child(even) { background-color: #f9f9f9; }
 tr:hover { background-color: #e8f4fd; }
+.status-select { padding: 6px; border-radius: 16px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; }
+.status-new { background: #e3f2fd; color: #1565c0; }
+.status-processing { background: #fff8e1; color: #8d6e63; }
+.status-shipped { background: #ede7f6; color: #5e35b1; }
+.status-delivered { background: #e8f5e9; color: #2e7d32; }
+.status-canceled { background: #ffebee; color: #c62828; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
+<script>
+function updateStatusClass(selectEl) {
+    const option = selectEl.options[selectEl.selectedIndex];
+    const cls = option.getAttribute('data-status-class') || 'new';
+    selectEl.className = 'status-select status-' + cls;
+    if (selectEl.form) {
+        selectEl.form.submit();
+    }
+}
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.status-select').forEach((selectEl) => {
+        selectEl.addEventListener('change', () => updateStatusClass(selectEl));
+    });
+});
+</script>
 </head>
 <body>
 <h2>Заказы</h2>
+<form class="filter" method="get">
+  <label>Статус:
+    <select name="status">
+      <option value="">Все</option>
+      {% for s in order_statuses %}
+      <option value="{{s}}" {% if status == s %}selected{% endif %}>{{s}}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Дата с:
+    <input type="date" name="date_from" value="{{date_from}}">
+  </label>
+  <label>Дата по:
+    <input type="date" name="date_to" value="{{date_to}}">
+  </label>
+  <label>Сортировка:
+    <select name="sort">
+      <option value="created_desc" {% if sort == 'created_desc' %}selected{% endif %}>Сначала новые</option>
+      <option value="created_asc" {% if sort == 'created_asc' %}selected{% endif %}>Сначала старые</option>
+      <option value="total_desc" {% if sort == 'total_desc' %}selected{% endif %}>Сумма по убыванию</option>
+      <option value="total_asc" {% if sort == 'total_asc' %}selected{% endif %}>Сумма по возрастанию</option>
+      <option value="status_asc" {% if sort == 'status_asc' %}selected{% endif %}>Статус A→Я</option>
+    </select>
+  </label>
+  <button type="submit">Применить</button>
+</form>
 <table>
-<tr><th>ID</th><th>Клиент</th><th>Дата создания</th><th>Сумма</th><th>Товары</th></tr>
+<tr><th>ID</th><th>Клиент</th><th>Дата создания</th><th>Сумма</th><th>Статус</th><th>Товары</th></tr>
 {% for o in orders %}
 <tr>
-  <td>{{o.id}}</td>
+  <td><a href="/orders/{{o.id}}">{{o.id}}</a></td>
   <td>{{o.first_name}} {{o.last_name}} ({{o.email}})</td>
   <td>{{o.created_at}}</td>
   <td>{{o.total}}</td>
+  <td>
+    <form method="post" action="/orders/update_status">
+      <input type="hidden" name="order_id" value="{{o.id}}">
+      <select name="status" class="status-select status-{{ status_classes.get(o.status, 'new') }}">
+        {% for s in order_statuses %}
+        <option value="{{s}}" data-status-class="{{ status_classes.get(s, 'new') }}" {% if o.status == s %}selected{% endif %}>{{s}}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </td>
   <td>{{o.items or 'Нет товаров'}}</td>
 </tr>
 {% endfor %}
 </table>
-<p><a href="/">Back to Products</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
+</body>
+</html>
+'''
+
+ORDER_DETAIL_HTML = '''
+<!doctype html>
+<html lang="ru">
+<head>
+<title>Order Details — Electronics Store</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 20px; }
+h2 { color: #2c3e50; text-align: center; }
+.card { background-color: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; }
+table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #34495e; color: white; }
+.status-select { padding: 6px; border-radius: 16px; border: 1px solid #ddd; font-weight: 600; cursor: pointer; }
+.status-new { background: #e3f2fd; color: #1565c0; }
+.status-processing { background: #fff8e1; color: #8d6e63; }
+.status-shipped { background: #ede7f6; color: #5e35b1; }
+.status-delivered { background: #e8f5e9; color: #2e7d32; }
+.status-canceled { background: #ffebee; color: #c62828; }
+</style>
+<script>
+function updateStatusClass(selectEl) {
+    const option = selectEl.options[selectEl.selectedIndex];
+    const cls = option.getAttribute('data-status-class') || 'new';
+    selectEl.className = 'status-select status-' + cls;
+    if (selectEl.form) {
+        selectEl.form.submit();
+    }
+}
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.status-select').forEach((selectEl) => {
+        selectEl.addEventListener('change', () => updateStatusClass(selectEl));
+    });
+});
+</script>
+</head>
+<body>
+<h2>Заказ #{{order.id}}</h2>
+<div class="card">
+  <div class="row">
+    <div>Клиент: {{order.first_name}} {{order.last_name}} ({{order.email}})</div>
+    <div>Дата: {{order.created_at}}</div>
+    <div>Сумма: {{order.total}}</div>
+  </div>
+  <div style="margin-top: 10px;">
+    <form method="post" action="/orders/update_status">
+      <input type="hidden" name="order_id" value="{{order.id}}">
+      <select name="status" class="status-select status-{{ status_classes.get(order.status, 'new') }}">
+        {% for s in order_statuses %}
+        <option value="{{s}}" data-status-class="{{ status_classes.get(s, 'new') }}" {% if order.status == s %}selected{% endif %}>{{s}}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+<table>
+  <tr><th>Товар</th><th>Цена</th><th>Кол-во</th><th>Сумма</th></tr>
+  {% for i in items %}
+  <tr>
+    <td>{{i.name}}</td>
+    <td>{{i.price}}</td>
+    <td>{{i.quantity}}</td>
+    <td>{{i.subtotal}}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p><a class="btn-link" href="/orders">Назад к заказам</a></p>
 </body>
 </html>
 '''
@@ -358,6 +548,8 @@ form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 
 form input, form select, form textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
 form button { background-color: #3498db; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
 form button:hover { background-color: #2980b9; }
+.btn-link { display: inline-block; padding: 8px 14px; border-radius: 999px; background: #eef2f7; color: #2c3e50; text-decoration: none; font-weight: 600; }
+.btn-link:hover { background: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -380,7 +572,7 @@ form button:hover { background-color: #2980b9; }
   <input name="image" value="{{product.image}}" placeholder="URL изображения">
   <button>Обновить товар</button>
 </form>
-<p><a href="/">Вернуться к товарам</a></p>
+<p><a class="btn-link" href="/">Назад к товарам</a></p>
 </body>
 </html>
 '''
@@ -495,12 +687,18 @@ def add_order():
         if not customer_id:
             return "Error: Select customer", 400
         customer_id = int(customer_id)
+        status = request.form.get('status', 'Новый')
+        if status not in ORDER_STATUSES:
+            status = 'Новый'
         product_ids = request.form.getlist('product_ids')
         quantities = request.form.getlist('quantities')
         if len(product_ids) != len(quantities):
             return "Error: Mismatch in products and quantities", 400
         total = 0
-        cursor = db.execute('INSERT INTO orders (customer_id, created_at, total) VALUES (?, datetime("now"), 0)', (customer_id,))
+        cursor = db.execute(
+            'INSERT INTO orders (customer_id, created_at, total, status) VALUES (?, datetime("now"), 0, ?)',
+            (customer_id, status)
+        )
         order_id = cursor.lastrowid
         for pid_str, qty_str in zip(product_ids, quantities):
             if not pid_str or not qty_str:
@@ -520,21 +718,101 @@ def add_order():
         db.execute('UPDATE orders SET total = ? WHERE id = ?', (total, order_id))
         db.commit()
         return redirect('/orders')
-    return render_template_string(ADD_ORDER_HTML, customers=customers_list, products=products_list)
+    return render_template_string(
+        ADD_ORDER_HTML,
+        customers=customers_list,
+        products=products_list,
+        order_statuses=ORDER_STATUSES
+    )
 
 @app.route('/orders')
 def orders():
     db = get_db()
-    orders_list = db.execute('''
-        SELECT o.id, o.created_at, o.total, c.first_name, c.last_name, c.email,
+    status = request.args.get('status', '')
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+    sort = request.args.get('sort', 'created_desc')
+    sort_map = {
+        'created_desc': 'o.created_at DESC',
+        'created_asc': 'o.created_at ASC',
+        'total_desc': 'o.total DESC',
+        'total_asc': 'o.total ASC',
+        'status_asc': 'o.status ASC',
+    }
+    sort_sql = sort_map.get(sort, sort_map['created_desc'])
+    where = []
+    params = []
+    if status:
+        where.append('o.status = ?')
+        params.append(status)
+    if date_from:
+        where.append('date(o.created_at) >= date(?)')
+        params.append(date_from)
+    if date_to:
+        where.append('date(o.created_at) <= date(?)')
+        params.append(date_to)
+    where_sql = ('WHERE ' + ' AND '.join(where)) if where else ''
+    orders_list = db.execute(f'''
+        SELECT o.id, o.created_at, o.total, o.status, c.first_name, c.last_name, c.email,
                GROUP_CONCAT(p.name || ' (x' || oi.quantity || ')', '; ') as items
         FROM orders o
         LEFT JOIN customers c ON o.customer_id = c.id
         LEFT JOIN order_items oi ON o.id = oi.order_id
         LEFT JOIN products p ON oi.product_id = p.id
+        {where_sql}
         GROUP BY o.id
-    ''').fetchall()
-    return render_template_string(ORDERS_HTML, orders=orders_list)
+        ORDER BY {sort_sql}
+    ''', params).fetchall()
+    return render_template_string(
+        ORDERS_HTML,
+        orders=orders_list,
+        order_statuses=ORDER_STATUSES,
+        status_classes=ORDER_STATUS_CLASSES,
+        status=status,
+        date_from=date_from,
+        date_to=date_to,
+        sort=sort
+    )
+
+@app.route('/orders/<int:order_id>')
+def order_detail(order_id):
+    db = get_db()
+    order = db.execute('''
+        SELECT o.id, o.created_at, o.total, o.status, c.first_name, c.last_name, c.email
+        FROM orders o
+        LEFT JOIN customers c ON o.customer_id = c.id
+        WHERE o.id = ?
+    ''', (order_id,)).fetchone()
+    if order is None:
+        return "Order not found", 404
+    items = db.execute('''
+        SELECT p.name, oi.price, oi.quantity, (oi.price * oi.quantity) AS subtotal
+        FROM order_items oi
+        LEFT JOIN products p ON oi.product_id = p.id
+        WHERE oi.order_id = ?
+    ''', (order_id,)).fetchall()
+    return render_template_string(
+        ORDER_DETAIL_HTML,
+        order=order,
+        items=items,
+        order_statuses=ORDER_STATUSES,
+        status_classes=ORDER_STATUS_CLASSES
+    )
+
+@app.route('/orders/update_status', methods=['POST'])
+def update_order_status():
+    order_id = request.form.get('order_id')
+    status = request.form.get('status', '')
+    if status not in ORDER_STATUSES:
+        return "Error: Invalid status", 400
+    try:
+        order_id = int(order_id)
+    except (TypeError, ValueError):
+        return "Error: Invalid order id", 400
+    db = get_db()
+    db.execute('UPDATE orders SET status = ? WHERE id = ?', (status, order_id))
+    db.commit()
+    return redirect(request.referrer or '/orders')
 
 @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
