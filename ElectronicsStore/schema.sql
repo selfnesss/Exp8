@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS products (
     rating REAL DEFAULT 0,
     category_id INTEGER,
     description TEXT,
+    image TEXT,
     FOREIGN KEY(category_id) REFERENCES categories(id)
 );
 
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS orders (
     customer_id INTEGER,
     created_at TEXT,
     total REAL,
+    status TEXT DEFAULT 'Новый',
     FOREIGN KEY(customer_id) REFERENCES customers(id)
 );
 
