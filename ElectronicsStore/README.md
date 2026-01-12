@@ -25,7 +25,7 @@
 ### Шаг 1: Клонирование или переход в директорию проекта
 Перейдите в корневую папку проекта `Exp8`:
 ```
-cd C:\Users\Саша\Documents\GitHub\Exp8
+C:\Users\sejdz\OneDrive\Документы\GitHub\Exp8
 ```
 
 ### Шаг 2: Создание виртуального окружения
@@ -136,4 +136,8 @@ python ElectronicsStore/app.py
 3. Зафиксируйте: `git commit -m "Добавлен прототип магазина бытовой техники"`
 4. Отправьте: `git push origin main` (или ваша ветка).
 
-Для вопросов или улучшений обратитесь к инструкциям практической работы.
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+и
+.\.venv\Scripts\Activate.ps1
+или
+powershell -ExecutionPolicy Bypass -File .\.venv\Scripts\Activate.ps1
