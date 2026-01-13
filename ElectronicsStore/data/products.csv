@@ -1,9 +1,9 @@
-id,name,brand,model,spec,price,stock,rating,category_id,description,
-1,Ultrabook X1,BrandX,X1,Intel i5;8GB;256GB SSD,79999.0,12,4.6,1,Lightweight laptop for office use,
-2,Gaming Laptop G7,BrandG,G7,Intel i7;16GB;1TB SSD;RTX3060,159999.0,5,4.8,1,Powerful laptop for gaming,
-3,Smartphone S20,BrandS,S20,6.5";128GB;5G,49999.0,30,4.5,2,Flagship smartphone,
-4,Smart TV 55",BrandTV,SV55,55" 4K HDR,69999.0,7,4.4,3,Smart TV with streaming apps,
-5,Microwave 25L,BrandK,MW25,25L;800W,7999.0,20,4.2,4,Compact microwave oven,
-6,Wireless Headphones WH100,BrandA,WH100,Bluetooth;NoiseCancel,6999.0,40,4.3,5,Comfortable wireless headphones,
-7,Smart Speaker SS1,BrandAudio,SS1,Voice assistant;WiFi,3999.0,25,4.1,5,Smart home speaker,
-8,USB-C Adapter,BrandAcc,UC1,,499.0,150,4.0,6,USB-C to HDMI adapter,
+id,name,brand,model,spec,price,stock,rating,category_id,description,image
+1,Ultrabook X1,BrandX,X1,Intel i5;8GB;256GB SSD,79999.0,12,4.6,1,Lightweight laptop for office use,https://via.placeholder.com/150?text=Laptop
+2,Gaming Laptop G7,BrandG,G7,Intel i7;16GB;1TB SSD;RTX3060,159999.0,5,4.8,1,Powerful laptop for gaming,https://via.placeholder.com/150?text=Gaming+Laptop
+3,Smartphone S20,BrandS,S20,6.5";128GB;5G,49999.0,30,4.5,2,Flagship smartphone,https://via.placeholder.com/150?text=Smartphone
+4,Smart TV 55",BrandTV,SV55,55" 4K HDR,69999.0,7,4.4,3,Smart TV with streaming apps,https://via.placeholder.com/150?text=Smart+TV
+5,Microwave 25L,BrandK,MW25,25L;800W,7999.0,20,4.2,4,Compact microwave oven,https://via.placeholder.com/150?text=Microwave
+6,Wireless Headphones WH100,BrandA,WH100,Bluetooth;NoiseCancel,6999.0,40,4.3,5,Comfortable wireless headphones,https://via.placeholder.com/150?text=Headphones
+7,Smart Speaker SS1,BrandAudio,SS1,Voice assistant;WiFi,3999.0,25,4.1,5,Smart home speaker,https://via.placeholder.com/150?text=Speaker
+8,USB-C Adapter,BrandAcc,UC1,,499.0,150,4.0,6,USB-C to HDMI adapter,https://via.placeholder.com/150?text=Adapter
