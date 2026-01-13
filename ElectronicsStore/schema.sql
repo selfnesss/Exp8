@@ -1,4 +1,3 @@
--- Schema for Electronics Store (variant 1). SQLite-compatible.
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS categories (
